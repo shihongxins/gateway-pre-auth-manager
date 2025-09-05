@@ -30,7 +30,7 @@ const router = createRouter({
         {
           path: 'file',
           name: 'file',
-          component: () => import('@/views/FileView.vue'),
+          component: () => import('@/views/file/FileList.vue'),
           meta: {
             title: '素材管理',
           },

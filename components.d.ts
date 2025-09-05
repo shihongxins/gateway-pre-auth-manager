@@ -31,5 +31,6 @@ declare module 'vue' {
     TSwitch: typeof import('tdesign-vue-next')['Switch']
     TTable: typeof import('tdesign-vue-next')['Table']
     TTag: typeof import('tdesign-vue-next')['Tag']
+    TUpload: typeof import('tdesign-vue-next')['Upload']
   }
 }

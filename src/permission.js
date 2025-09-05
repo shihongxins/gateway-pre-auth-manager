@@ -39,6 +39,18 @@ request.interceptors.request.use(
     if (config.headers['x-token'] !== userStore.token) {
       config.headers['x-token'] = userStore.token;
     }
+    if (config.headers['Content-Type'] === 'multipart/form-data') {
+      if (config.data && !(config.data instanceof FormData)) {
+        const formData = new FormData();
+        Object.keys(config.data).forEach((key) => {
+          formData.append(key, config.data[key]);
+        });
+        config.data = formData;
+      }
+    }
+    if (config.data instanceof FormData || config.data instanceof Blob) {
+      config.headers['Content-Type'] = 'multipart/form-data';
+    }
     return config;
   },
   (error) => {
