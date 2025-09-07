@@ -38,7 +38,7 @@ const router = createRouter({
         {
           path: 'template',
           name: 'template',
-          component: () => import('@/views/TemplateView.vue'),
+          component: () => import('@/views/template/TemplateList.vue'),
           meta: {
             title: '模板管理',
           },
