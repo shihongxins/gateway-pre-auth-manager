@@ -5,6 +5,13 @@ import { useRequestList } from '../../utils/useRequestList';
 import FileEditor from './FileEditor.vue';
 import FilePreview from './FilePreview.vue';
 
+const props = defineProps({
+  file_type: {
+    type: Number,
+    default: null,
+  },
+});
+
 /**
  * @type {import('tdesign-vue-next').PrimaryTableCol[]}
  */
@@ -49,13 +56,15 @@ async function getFileListEffect() {
     fileList.loading.value = false;
   }
 }
-const fileList = useRequestList(getFileListEffect);
+const fileList = useRequestList(getFileListEffect, { file_type: props.file_type });
 const pageInfo = fileList.getPageInfoByConfigFromParams({
   pageKey: 'page',
   pageSizeKey: 'page_size',
   totalKey: 'total',
 });
-fileList.search();
+onMounted(() => {
+  fileList.search();
+});
 
 const refFileEditor = useTemplateRef('refFileEditor');
 
@@ -72,6 +81,10 @@ const closePreview = () => {
   previewSrc.value = '';
   previewTitle.value = '';
 };
+
+defineExpose({
+  fileList,
+});
 </script>
 
 <template>
@@ -91,12 +104,26 @@ const closePreview = () => {
             <template #icon><t-icon name="delete" /></template><span>批量删除</span>
           </t-button>
         </t-popconfirm>
-        <span class="pl-2 text-sm text-gray-500">选中：{{ fileList.selected.value.length }} 条信息</span>
+        <span class="px-2 text-sm text-nowrap text-gray-500">
+          选中：{{ fileList.selected.value.length }} 条信息
+        </span>
       </div>
       <div class="flex items-center justify-between">
+        <t-select
+          placeholder="请选择文件类型"
+          autoWidth
+          clearable
+          showArrow
+          v-model="fileList.params.file_type"
+          @change="fileList.searchOrReload()"
+          v-show="props.file_type === null"
+        >
+          <t-option label="图片" :value="1"></t-option>
+          <t-option label="视频" :value="2"></t-option>
+        </t-select>
         <t-input
           placeholder="请输入内容"
-          class="!w-[300px]"
+          class="max-w-[300px]"
           v-model="fileList.params.keyword"
           @change="fileList.searchOrReload()"
         >
@@ -130,8 +157,17 @@ const closePreview = () => {
         </t-tag>
       </template>
       <template #action="{ row }">
-        <t-button size="small" variant="outline" shape="round" theme="primary" @click="showPreview(row.path, row.file_name)">
-          <template #icon><t-icon :name="row.file_type === 1 ? 'image' : 'media-library'" /></template>预览
+        <t-button
+          size="small"
+          variant="outline"
+          shape="round"
+          theme="primary"
+          @click="showPreview(row.path, row.file_name)"
+        >
+          <template #icon>
+            <t-icon :name="row.file_type === 1 ? 'image' : 'media-library'" />
+          </template>
+          预览
         </t-button>
         <t-popconfirm
           theme="danger"

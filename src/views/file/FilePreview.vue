@@ -21,13 +21,13 @@ const isVideo = computed(() => {
 });
 </script>
 <template>
-  <div class="overflow-hidden rounded bg-gray-400 p-2">
+  <div class="overflow-hidden">
     <slot>
       <img
         v-if="isImage"
         :src="src"
         alt="Preview"
-        class="mx-auto max-h-full max-w-full object-contain"
+        class="mx-auto max-h-full max-w-full border object-contain"
         v-bind="$attrs"
       />
       <video
@@ -37,7 +37,7 @@ const isVideo = computed(() => {
         loop
         autoplay
         muted
-        class="mx-auto max-h-full max-w-full object-contain"
+        class="mx-auto max-h-full max-w-full border object-contain"
         v-bind="$attrs"
       />
     </slot>
