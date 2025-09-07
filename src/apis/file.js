@@ -1,7 +1,7 @@
 import { request } from '../utils/request';
 
 /**
- * 添加文件 FormData 格式
+ * 添加文件
  * @param {import("../types/FileInfo").FileInfo} info
  * @returns {Promise<import("../types/Request").RequestResponse<any>>|Error}
  */
@@ -15,11 +15,13 @@ export function addFile(info) {
   if (!info.files) {
     return new Error('文件不能为空');
   }
-  return request.post('/file/addFile', info, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }).then((res) => res.data);
+  return request
+    .post('/file/addFile', info, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((res) => res.data);
 }
 
 /**

@@ -100,7 +100,9 @@ const refUserEditor = useTemplateRef('refUserEditor');
             <template #icon><t-icon name="delete" /></template><span>批量删除</span>
           </t-button>
         </t-popconfirm>
-        <span class="pl-2 text-sm text-gray-500">选中：{{ userList.selected.value.length }} 条信息</span>
+        <span class="pl-2 text-sm text-gray-500">
+          选中：{{ userList.selected.value.length }} 条信息
+        </span>
       </div>
       <div class="flex items-center justify-between">
         <t-input
