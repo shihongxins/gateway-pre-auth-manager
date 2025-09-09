@@ -131,7 +131,7 @@ const refUserEditor = useTemplateRef('refUserEditor');
       :data="userList.list.value"
       :pagination="pageInfo"
       lazy-load
-      @select-change="userList.selectChange"
+      v-model:selected-row-keys="userList.selected.value"
       @page-change="userList.pageInfoChange"
     >
       <template #roles="{ row }">

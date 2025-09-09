@@ -147,7 +147,7 @@ defineExpose({
       :data="fileList.list.value"
       :pagination="pageInfo"
       lazy-load
-      @select-change="fileList.selectChange"
+      v-model:selected-row-keys="fileList.selected.value"
       @page-change="fileList.pageInfoChange"
     >
       <template #file_type="{ row }">

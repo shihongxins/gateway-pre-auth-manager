@@ -24,6 +24,9 @@ export function useRequestList(effect, additionalParams = {}) {
   const total = ref(0);
   const loading = ref(false);
   const selected = ref([]);
+  watch(list, () => {
+    selectChange([]);
+  });
   /**
    * @description 重置参数
    */

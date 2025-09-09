@@ -139,7 +139,7 @@ const closePreview = () => {
       :data="templateList.list.value"
       :pagination="pageInfo"
       lazy-load
-      @select-change="templateList.selectChange"
+      v-model:selected-row-keys="templateList.selected.value"
       @page-change="templateList.pageInfoChange"
     >
       <template #action="{ row }">
