@@ -33,8 +33,7 @@ export function updateUser(info) {
   if (!info.id) {
     return new Error('用户ID不能为空');
   }
-  // FIXME: 请求地址不友好
-  return request.post('/user/setUserMessage', info).then((res) => res.data);
+  return request.post('/user/updateUser', info).then((res) => res.data);
 }
 
 /**

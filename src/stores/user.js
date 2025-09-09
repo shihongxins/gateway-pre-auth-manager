@@ -5,7 +5,6 @@ import * as userApi from '../apis/user';
 export const useUserStore = defineStore(
   'user',
   () => {
-    // FIXME: 登录后用户信息不完整，没有邮箱和状态
     /**
      * @type {import('vue').Ref<import('../types/UserInfo').UserInfo | null>}
      * @description 用户信息
