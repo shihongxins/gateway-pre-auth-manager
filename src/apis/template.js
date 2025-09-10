@@ -1,13 +1,13 @@
 import { request } from '../utils/request';
 
 export const templateFieldRules = {
-  template_name: [{ required: true, pattren: /^\s*$/, message: '模板名称不能为空' }],
-  page_title: [{ required: true, pattren: /^\s*$/, message: '页面标题不能为空' }],
+  template_name: [{ required: true, pattern: /^(\s+)?$/, message: '模板名称不能为空' }],
+  page_title: [{ required: true, pattern: /^(\s+)?$/, message: '页面标题不能为空' }],
   contact: [
     { required: true, message: '联系人不能为空' },
     {
       validator: (val = '') => {
-        if (/^\s*$/.test(val)) {
+        if (/^(\s+)?$/.test(val)) {
           return { result: false, message: '联系人不能为空' };
         }
         if (
@@ -20,7 +20,7 @@ export const templateFieldRules = {
       },
     },
   ],
-  introduction: [{ required: true, pattren: /^\s*$/, message: '介绍不能为空' }],
+  introduction: [{ required: true, pattern: /^(\s+)?$/, message: '介绍不能为空' }],
   head_picture: [{ required: true, message: '请上传头像' }],
   wait_time: [
     { required: true, message: '等待时间不能为空' },
@@ -33,7 +33,7 @@ export const templateFieldRules = {
       },
     },
   ],
-  auth_success_link: [{ required: true, pattren: /^\s*$/, message: '成功跳转不能为空' }],
+  auth_success_link: [{ required: true, pattern: /^(\s+)?$/, message: '成功跳转链接不能为空' }],
 };
 
 /**
@@ -139,7 +139,7 @@ export function getTemplateList(params) {
  * @returns {Promise<import("../types/Request").RequestResponse<import("../types/TemplateInfo").TemplateInfo>>|Error}
  */
 export function getTemplateDetail(id) {
-  if (!/^\d$/.test(id + '') || id <= 0) {
+  if (!/^\d+$/.test(id + '') || id <= 0) {
     return new Error('未知的模板ID');
   }
   return request.get('/template/getTemplateDetail', { params: { id } }).then((res) => res.data);
