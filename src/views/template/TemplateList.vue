@@ -29,6 +29,7 @@ const tableColumns = [
   {
     colKey: 'introduction',
     title: '简介',
+    ellipsis: true,
   },
   {
     colKey: 'action',
@@ -46,13 +47,7 @@ async function getTemplateListEffect() {
     } else if (res?.code !== 0) {
       MessagePlugin.error({ content: `获取模板列表失败：${res?.msg}` });
     } else {
-      // FIXME: 临时处理字段 page_title 错误写成 page_tile
-      templateList.list.value = (res.data.list || []).map((item) => {
-        if (typeof item?.['page_tile'] === 'string') {
-          item.page_title = item?.['page_tile'];
-        }
-        return item;
-      });
+      templateList.list.value = res.data.list || [];
       templateList.total.value = res.data.total || templateList.list.value.length;
     }
   } catch (error) {
@@ -72,17 +67,7 @@ const pageInfo = templateList.getPageInfoByConfigFromParams({
 templateList.search();
 
 const refTemplateEditor = useTemplateRef('refTemplateEditor');
-
-const previewVisible = ref(false);
-const previewId = ref(0);
-const showPreview = (id = 0) => {
-  previewId.value = id;
-  previewVisible.value = true;
-};
-const closePreview = () => {
-  previewVisible.value = false;
-  previewId.value = 0;
-};
+const refTemplatePreview = useTemplateRef('refTemplatePreview');
 </script>
 
 <template>
@@ -121,10 +106,12 @@ const closePreview = () => {
             <t-icon name="search" class="cursor-pointer" @click="templateList.searchOrReload()" />
           </template>
         </t-input>
-        <t-button shape="round" theme="default" @click="templateList.resetSearch()">重置</t-button>
-        <t-button shape="round" theme="primary" @click="templateList.searchOrReload()"
-          >搜索</t-button
-        >
+        <t-button shape="round" theme="default" @click="templateList.resetSearch()">
+          重置
+        </t-button>
+        <t-button shape="round" theme="primary" @click="templateList.searchOrReload()">
+          搜索
+        </t-button>
       </div>
     </template>
     <t-table
@@ -148,7 +135,7 @@ const closePreview = () => {
           variant="outline"
           shape="round"
           theme="primary"
-          @click="showPreview(row.id)"
+          @click="refTemplatePreview.showPreview(row.id)"
         >
           <template #icon>
             <t-icon :name="row.file_type === 1 ? 'image' : 'media-library'" />
@@ -177,13 +164,6 @@ const closePreview = () => {
       </template>
     </t-table>
     <template-editor ref="refTemplateEditor" @close="templateList.searchOrReload"></template-editor>
-    <t-dialog
-      placement="center"
-      header="模板预览"
-      v-model:visible="previewVisible"
-      @close="closePreview"
-    >
-      <template-preview :id="previewId"></template-preview>
-    </t-dialog>
+    <template-preview ref="refTemplatePreview"></template-preview>
   </TableLayout>
 </template>

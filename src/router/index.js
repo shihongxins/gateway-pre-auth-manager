@@ -1,10 +1,20 @@
 import LayoutIndex from '@/layouts/LayoutIndex.vue';
+import AuthView from '@/views/AuthView.vue';
 import LoginView from '@/views/LoginView.vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
+    {
+      path: '/auth',
+      name: 'auth',
+      component: AuthView,
+      meta: {
+        title: '网关预登录认证',
+        requireAuth: false,
+      },
+    },
     {
       path: '/login',
       name: 'login',

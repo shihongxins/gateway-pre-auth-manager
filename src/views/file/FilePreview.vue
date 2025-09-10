@@ -19,11 +19,17 @@ const isVideo = computed(() => {
   const extension = props.src.split('.').pop()?.toLowerCase();
   return videoExtensions.includes(extension);
 });
+
+const refElement = useTemplateRef('refElement');
+defineExpose({
+  refElement,
+});
 </script>
 <template>
   <div class="w-full overflow-hidden">
     <slot>
       <img
+        ref="refElement"
         v-if="isImage"
         :src="src"
         alt="Preview"
@@ -31,10 +37,12 @@ const isVideo = computed(() => {
         v-bind="$attrs"
       />
       <video
+        ref="refElement"
         v-else-if="isVideo"
         :src="src"
         controls
-        loop
+        disable-picture-in-picture
+        disable-remote-playback
         autoplay
         muted
         class="m-auto h-full object-cover"

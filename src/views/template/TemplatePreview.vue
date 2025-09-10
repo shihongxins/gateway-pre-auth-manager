@@ -1,73 +1,58 @@
 <script setup>
-import * as templateApi from '../../apis/template';
-import FilePreview from '../file/FilePreview.vue';
+import AuthView from '../AuthView.vue';
 
-const props = defineProps({
-  id: {
-    type: Number,
-    default: 0,
-  },
+const visible = ref(false);
+const templateId = ref(0);
+const templateLink = computed(() => {
+  return `${window.location.origin}/#/auth?id=${unref(templateId)}`;
 });
-const route = useRoute();
-const id = computed(() => +route.query.id || props.id);
-const loading = ref(false);
-/**
- * @type {import('vue').Ref<import('../../types/TemplateInfo').TemplateInfo>}
- */
-const templateInfo = ref(null);
-async function getTemplateInfo() {
-  loading.value = true;
-  if (id.value) {
-    try {
-      const res = await templateApi.getTemplateDetail(id.value);
-      if (res instanceof Error) {
-        throw res;
-      } else if (res?.code !== 0) {
-        MessagePlugin.error({ content: `获取模板详情失败：${res?.msg}` });
-      } else {
-        templateInfo.value = res.data;
-        document.title = templateInfo.value.page_title || '网关预认证';
-      }
-    } catch (error) {
-      MessagePlugin.error({ content: `获取模板详情出错：${error.message}` });
-    } finally {
-      loading.value = false;
-    }
+const showPreview = (id = 0) => {
+  templateId.value = unref(id);
+  visible.value = true;
+};
+const closePreview = () => {
+  visible.value = false;
+  templateId.value = 0;
+};
+const copyTip = ref('复制链接');
+async function copyLink() {
+  try {
+    await navigator.clipboard.writeText(templateLink.value);
+    copyTip.value = '复制成功';
+  } catch (error) {
+    console.error(error);
+    copyTip.value = '复制失败，请手动复制';
+  } finally {
+    setTimeout(() => {
+      copyTip.value = '复制链接';
+    }, 1000);
   }
-}
-const swiperFileList = computed(() => {
-  return [
-    ...(templateInfo.value?.video_list || []),
-    ...(templateInfo.value?.picture_list || []),
-  ].filter((file) => file?.path);
+};
+defineExpose({
+  showPreview,
+  closePreview,
 });
-watch(id, getTemplateInfo);
 </script>
 
 <template>
-  <div class="flex h-full w-full items-center justify-center" v-if="id === templateInfo?.id">
-    <t-loading :loading="loading" fullscreeen />
-    <div class="h-110 w-60 space-y-4 overflow-auto rounded-xl p-4 text-black ring-1 ring-inset">
-      <div class="relative h-0 w-full bg-gray-300 pb-[56.25%]">
-        <t-swiper class="absolute top-0 left-0 h-full w-full">
-          <t-swiper-item v-for="file in swiperFileList" :key="file.uuid">
-            <file-preview :src="file.path" />
-          </t-swiper-item>
-        </t-swiper>
-      </div>
-      <div class="flex items-center">
-        <t-avatar
-          shape="circle"
-          size="large"
-          hide-on-load-failed
-          :src="templateInfo?.head_picture"
-        ></t-avatar>
-        <div class="ml-2 flex flex-1 flex-col overflow-hidden">
-          <p class="text-lg font-bold text-nowrap text-ellipsis">{{ templateInfo?.page_title }}</p>
-          <p class="text-sm text-nowrap text-ellipsis">{{ templateInfo?.contact }}</p>
-        </div>
-      </div>
-      <p class="indent-8 text-sm">{{ templateInfo?.introduction }}</p>
+  <t-dialog
+    placement="center"
+    header="模板预览"
+    :footer="false"
+    v-model:visible="visible"
+    @close="closePreview"
+  >
+    <t-input :value="templateLink" readonly style="width: 375px; margin: 0 auto 1rem;">
+      <template #suffix>
+        <t-popup :content="copyTip">
+            <t-button size="small" theme="default" @click="copyLink">
+              <t-icon name="copy"></t-icon>
+            </t-button>
+        </t-popup>
+      </template>
+    </t-input>
+    <div style="width: 375px; height: 667px; margin: 0 auto; box-shadow: 0 0 1px 0px #000; border-radius: 4px; overflow: hidden;">
+      <auth-view :id="templateId"></auth-view>
     </div>
-  </div>
+  </t-dialog>
 </template>
