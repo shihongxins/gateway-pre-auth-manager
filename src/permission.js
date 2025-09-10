@@ -2,31 +2,28 @@ import router from './router';
 import { useUserStore } from './stores/user';
 import { request } from './utils/request';
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const userStore = useUserStore();
   if (to.path === '/login' && userStore.isLoggedIn) {
-    next('/');
-    return;
+    return '/home';
   }
   if (
     to.path !== '/login' &&
-    (typeof to.meta.requiresAuth === 'undefined' || to.meta.requiresAuth) &&
+    (typeof to.meta.requireAuth === 'undefined' || to.meta.requireAuth) &&
     !userStore.isLoggedIn
   ) {
-    MessagePlugin.warning('无权限访问，请先登录').finally(() => {
-      userStore.logout().finally(() => {
-        next('/login');
-      });
-    });
-  } else {
-    next();
+    userStore.logout();
+    MessagePlugin.warning('无权访问，请先登录');
+    return '/login';
   }
 });
+
+export const REQUEST_WHITELIST = ['/login', '/loginOut', '/getTemplateDetail'];
 
 request.interceptors.request.use(
   (config) => {
     const userStore = useUserStore();
-    if (!/login|loginOut/.test(config.url || '')) {
+    if (!REQUEST_WHITELIST.some((item) => config.url.endsWith(item))) {
       if (!userStore.isLoggedIn || !userStore.token) {
         MessagePlugin.warning('登录过期，请重新登录').finally(() => {
           userStore.logout().finally(() => {
@@ -62,7 +59,7 @@ request.interceptors.response.use(
     /** @type {import('./types/Request').RequestResponse<any>} */
     const data = response.data;
     if (data.msg.includes('账户') && data.msg.includes('失效')) {
-      MessagePlugin.warning('您的帐户异地登陆或令牌失效，请重新登录').finally(() => {
+      MessagePlugin.warning('登录过期，请重新登录').finally(() => {
         if (!/loginOut/.test(response.config.url || '')) {
           useUserStore().logout();
         }
