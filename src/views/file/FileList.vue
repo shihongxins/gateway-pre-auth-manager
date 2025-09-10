@@ -6,7 +6,11 @@ import FileEditor from './FileEditor.vue';
 import FilePreview from './FilePreview.vue';
 
 const props = defineProps({
-  file_type: {
+  showAction: {
+    type: Boolean,
+    default: true,
+  },
+  fileType: {
     type: Number,
     default: null,
   },
@@ -56,13 +60,17 @@ async function getFileListEffect() {
     fileList.loading.value = false;
   }
 }
-const fileList = useRequestList(getFileListEffect, { file_type: props.file_type });
+const fileList = useRequestList(getFileListEffect, { file_type: props.fileType });
 const pageInfo = fileList.getPageInfoByConfigFromParams({
   pageKey: 'page',
   pageSizeKey: 'page_size',
   totalKey: 'total',
 });
 onMounted(() => {
+  fileList.search();
+});
+watch(() => props.fileType, (newVal) => {
+  fileList.params.file_type = newVal;
   fileList.search();
 });
 
@@ -90,7 +98,7 @@ defineExpose({
 <template>
   <TableLayout>
     <template #header>
-      <div class="flex items-center">
+      <div class="flex items-center" v-if="props.showAction">
         <t-button shape="round" theme="primary" @click="refFileEditor.show()">
           <template #icon><t-icon name="add" /></template><span>添加文件</span>
         </t-button>
@@ -111,19 +119,17 @@ defineExpose({
       <div class="flex items-center justify-between">
         <t-select
           placeholder="请选择文件类型"
-          autoWidth
           clearable
           showArrow
           v-model="fileList.params.file_type"
           @change="fileList.searchOrReload()"
-          v-show="props.file_type === null"
+          v-show="props.fileType === null"
         >
           <t-option label="图片" :value="1"></t-option>
           <t-option label="视频" :value="2"></t-option>
         </t-select>
         <t-input
           placeholder="请输入内容"
-          class="max-w-[300px]"
           v-model="fileList.params.keyword"
           @change="fileList.searchOrReload()"
         >
@@ -170,6 +176,7 @@ defineExpose({
           预览
         </t-button>
         <t-popconfirm
+          v-if="props.showAction"
           theme="danger"
           content="确定删除此文件吗？"
           :confirmBtn="{ theme: 'danger' }"
@@ -181,8 +188,8 @@ defineExpose({
         </t-popconfirm>
       </template>
     </t-table>
-    <file-editor ref="refFileEditor" @close="fileList.searchOrReload"></file-editor>
-    <t-dialog v-model:visible="previewVisible" :header="previewTitle" @close="closePreview">
+    <file-editor v-if="props.showAction" ref="refFileEditor" @close="fileList.searchOrReload"></file-editor>
+    <t-dialog v-model:visible="previewVisible" :header="previewTitle" :footer="false" @close="closePreview">
       <file-preview :src="previewSrc"></file-preview>
     </t-dialog>
   </TableLayout>

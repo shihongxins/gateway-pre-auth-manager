@@ -56,8 +56,8 @@ const videoAndPictureFiles = computed({
     return [...formData.video_list, ...formData.picture_list].filter((item) => item?.file_type);
   },
   set(value) {
-    formData.video_list = value.filter((item) => item?.file_type === 1);
-    formData.picture_list = value.filter((item) => item?.file_type === 2);
+    formData.video_list = value.filter((item) => item?.file_type === 2);
+    formData.picture_list = value.filter((item) => item?.file_type === 1);
   },
 });
 const headPictureFiles = computed({
@@ -158,15 +158,16 @@ defineExpose({
       <t-form-item label="模板名称" name="template_name">
         <t-input placeholder="请输入模板名称" v-model.trim="formData.template_name" />
       </t-form-item>
-      <t-form-item label="轮播图" name="video_list">
+      <t-form-item label="轮播图" name="video_list" help="分辨率建议：600*340，支持 mp4,png,jpg,jpeg 格式，最多 5 项">
         <template-file-picker
           v-model="videoAndPictureFiles"
-          :max-count="20"
+          :max-count="5"
           :multiple="true"
+          :show-action="false"
         ></template-file-picker>
       </t-form-item>
-      <t-form-item label="头像" name="head_picture">
-        <template-file-picker v-model="headPictureFiles" :file-type="1"></template-file-picker>
+      <t-form-item label="头像" name="head_picture" help="分辨率建议：150*150，支持 png,jpg,jpeg 格式">
+        <template-file-picker v-model="headPictureFiles" :file-type="1" :show-action="false"></template-file-picker>
       </t-form-item>
       <t-form-item label="页面标题" name="page_title">
         <t-input placeholder="请输入页面标题" v-model.trim="formData.page_title" />

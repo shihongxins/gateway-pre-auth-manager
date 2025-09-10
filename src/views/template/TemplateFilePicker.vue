@@ -11,15 +11,17 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
-  file_type: {
+  fileType: {
     type: Number,
     default: null,
   },
 });
-
+/**
+ * @type {import('vue').ModelRef<import('../../types/FileInfo').FileInfo[]|null>}
+ */
 const modelValue = defineModel({
   type: Array,
-  default: () => [],
+  default: () => null,
 });
 
 const filePickerVisible = ref(false);
@@ -35,10 +37,14 @@ function closeFilePicker() {
   const selectedFile = refFileList.value.fileList.list.value.filter((item) =>
     selectedFileId.includes(item.id),
   );
-  modelValue.value = [...modelValue.value, ...selectedFile]
-    .filter((item) => (props.file_type ? item.file_type === props.file_type : true))
+  let newModelValue = [...modelValue.value, ...selectedFile]
+    .filter((item) => (props.fileType ? item.file_type === props.fileType : true))
     .slice(0, props.maxCount)
     .sort((a, b) => b.file_type - a.file_type);
+  newModelValue = newModelValue.filter(
+    (item, index) => newModelValue.findIndex((i) => i.uuid === item.uuid) === index,
+  );
+  modelValue.value = newModelValue;
   filePickerVisible.value = false;
 }
 /**
@@ -53,9 +59,9 @@ function removeFile(file) {
   <div class="flex h-full w-full space-x-2 overflow-hidden overflow-x-auto">
     <template v-for="file in modelValue" :key="file.uuid">
       <div
-        class="group relative flex h-20 w-20 shrink-0 items-center justify-center rounded ring-1 ring-inset"
+        class="group relative flex h-20 w-20 p-1 shrink-0 items-center justify-center rounded ring-1 ring-inset"
       >
-        <file-preview :src="file.path" :autoplay="false" :controls="false"></file-preview>
+        <file-preview :src="file.path" :autoplay="false" :controls="false" class="ring ring-gray-400"></file-preview>
         <t-icon
           name="close-circle"
           size="medium"
@@ -65,6 +71,7 @@ function removeFile(file) {
       </div>
     </template>
     <div
+      v-show="modelValue.length < props.maxCount"
       class="flex h-20 w-20 shrink-0 cursor-pointer items-center justify-center rounded ring-1 ring-inset"
       @click="openFilePicker"
     >
@@ -81,7 +88,8 @@ function removeFile(file) {
       <file-list
         ref="refFileList"
         v-if="filePickerVisible"
-        :file-type="props.file_type"
+        :file-type="props.fileType"
+        v-bind="$attrs"
       ></file-list>
     </t-dialog>
   </div>
