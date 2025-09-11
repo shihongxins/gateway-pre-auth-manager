@@ -149,7 +149,12 @@ watch(templateId, getTemplateInfo, { immediate: true });
         <t-icon name="caret-up"></t-icon>
       </t-button>
     </div>
-    <t-drawer placement="bottom" show-in-attached-element v-model:visible="authDrawerVisible" :footer="false">
+    <t-drawer
+      placement="bottom"
+      show-in-attached-element
+      v-model:visible="authDrawerVisible"
+      :footer="false"
+    >
       <template #header>
         <div class="m-auto flex flex-col items-center justify-between">
           <span class="font-medium">选择联网方式</span>

@@ -59,9 +59,14 @@ function removeFile(file) {
   <div class="flex h-full w-full space-x-2 overflow-hidden overflow-x-auto">
     <template v-for="file in modelValue" :key="file.uuid">
       <div
-        class="group relative flex h-20 w-20 p-1 shrink-0 items-center justify-center rounded ring-1 ring-inset"
+        class="group relative flex h-20 w-20 shrink-0 items-center justify-center rounded p-1 ring-1 ring-inset"
       >
-        <file-preview :src="file.path" :autoplay="false" :controls="false" class="ring ring-gray-400"></file-preview>
+        <file-preview
+          :src="file.path"
+          :autoplay="false"
+          :controls="false"
+          class="ring ring-gray-400"
+        ></file-preview>
         <t-icon
           name="close-circle"
           size="medium"

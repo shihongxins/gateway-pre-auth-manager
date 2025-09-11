@@ -69,10 +69,13 @@ const pageInfo = fileList.getPageInfoByConfigFromParams({
 onMounted(() => {
   fileList.search();
 });
-watch(() => props.fileType, (newVal) => {
-  fileList.params.file_type = newVal;
-  fileList.search();
-});
+watch(
+  () => props.fileType,
+  (newVal) => {
+    fileList.params.file_type = newVal;
+    fileList.search();
+  },
+);
 
 const refFileEditor = useTemplateRef('refFileEditor');
 
@@ -188,8 +191,17 @@ defineExpose({
         </t-popconfirm>
       </template>
     </t-table>
-    <file-editor v-if="props.showAction" ref="refFileEditor" @close="fileList.searchOrReload"></file-editor>
-    <t-dialog v-model:visible="previewVisible" :header="previewTitle" :footer="false" @close="closePreview">
+    <file-editor
+      v-if="props.showAction"
+      ref="refFileEditor"
+      @close="fileList.searchOrReload"
+    ></file-editor>
+    <t-dialog
+      v-model:visible="previewVisible"
+      :header="previewTitle"
+      :footer="false"
+      @close="closePreview"
+    >
       <file-preview :src="previewSrc"></file-preview>
     </t-dialog>
   </TableLayout>
