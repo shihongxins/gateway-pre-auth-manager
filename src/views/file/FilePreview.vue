@@ -33,7 +33,7 @@ defineExpose({
         v-if="isImage"
         :src="src"
         alt="Preview"
-        class="m-auto h-full object-cover"
+        class="m-auto h-full w-full object-cover"
         v-bind="$attrs"
       />
       <video
@@ -43,9 +43,10 @@ defineExpose({
         controls
         disable-picture-in-picture
         disable-remote-playback
-        autoplay
         muted
-        class="m-auto h-full object-cover"
+        autoplay
+        loop
+        class="m-auto h-full w-full object-cover"
         v-bind="$attrs"
       />
     </slot>
