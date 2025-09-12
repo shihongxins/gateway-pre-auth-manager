@@ -1,5 +1,6 @@
 <script setup>
 import { getTemplateDetail } from '@/apis/template';
+import { useMediaQuery, useScreenOrientation } from '@vueuse/core';
 import FilePreview from './file/FilePreview.vue';
 
 const props = defineProps({
@@ -101,6 +102,16 @@ function handleUnmuted() {
 
 const authDrawerVisible = ref(false);
 watch(templateId, getTemplateInfo, { immediate: true });
+
+const { isSupported: isScreenOrientationSupported, orientation } = useScreenOrientation();
+const isLargeScreen = useMediaQuery('(min-width: 1024px)');
+const authDrawerSize = computed(() => {
+  let size = 'small';
+  if (isScreenOrientationSupported.value && orientation.value.includes('landscape')) {
+    size = isLargeScreen.value ? '12rem' : '11rem';
+  }
+  return size;
+});
 </script>
 
 <template>
@@ -110,8 +121,12 @@ watch(templateId, getTemplateInfo, { immediate: true });
     :class="props.id ? 'h-full w-full' : 'h-screen w-screen overflow-hidden'"
     @click="handleUnmuted"
   >
-    <div class="max-h-full w-full overflow-auto">
-      <div class="relative h-0 pb-[calc(9/16*100%)]">
+    <div
+      class="m-auto flex h-full max-h-full w-full flex-col overflow-auto landscape:flex-row landscape:overflow-hidden"
+    >
+      <div
+        class="relative h-0 pb-[calc(9/16*100%)] shadow landscape:h-full landscape:flex-1 landscape:p-0"
+      >
         <div class="absolute top-0 left-0 h-full w-full overflow-hidden rounded bg-gray-200">
           <t-swiper
             :autoplay="swiperAutoPlay"
@@ -131,22 +146,32 @@ watch(templateId, getTemplateInfo, { immediate: true });
           </t-swiper>
         </div>
       </div>
-      <div class="m-4 flex items-center">
-        <t-avatar
-          shape="circle"
-          size="large"
-          :image="templateInfo?.head_picture?.path"
-          :image-props="avatarImageProp"
-          :alt="templateInfo?.page_title"
-        ></t-avatar>
-        <div class="ml-2 flex flex-1 flex-col overflow-hidden">
-          <p class="text-lg font-medium text-nowrap text-ellipsis">
-            {{ templateInfo?.page_title }}
-          </p>
-          <p class="text-sm text-nowrap text-ellipsis">{{ templateInfo?.contact }}</p>
+      <div
+        class="m-4 flex flex-col space-y-4 landscape:h-full landscape:flex-2 landscape:overflow-auto"
+      >
+        <div class="flex items-center">
+          <t-avatar
+            shape="circle"
+            size="4rem"
+            :image="templateInfo?.head_picture?.path"
+            :image-props="avatarImageProp"
+            :alt="templateInfo?.page_title"
+          ></t-avatar>
+          <div class="ml-2 flex flex-1 flex-col overflow-hidden">
+            <p
+              class="text-lg font-medium text-nowrap text-ellipsis md:text-xl lg:text-2xl xl:text-3xl"
+            >
+              {{ templateInfo?.page_title }}
+            </p>
+            <p class="text-base text-nowrap text-ellipsis md:text-lg lg:text-xl xl:text-2xl">
+              {{ templateInfo?.contact }}
+            </p>
+          </div>
         </div>
+        <p class="indent-8 text-base md:text-lg lg:text-xl xl:text-2xl">
+          {{ templateInfo?.introduction }}
+        </p>
       </div>
-      <p class="mx-4 indent-8 text-sm">{{ templateInfo?.introduction }}</p>
     </div>
     <div class="absolute right-0 bottom-0 left-0 m-auto w-8 translate-y-1/3">
       <t-button shape="circle" theme="default" @click="authDrawerVisible = true">
@@ -155,6 +180,7 @@ watch(templateId, getTemplateInfo, { immediate: true });
     </div>
     <t-drawer
       placement="bottom"
+      :size="authDrawerSize"
       show-in-attached-element
       v-model:visible="authDrawerVisible"
       :footer="false"
@@ -225,6 +251,7 @@ watch(templateId, getTemplateInfo, { immediate: true });
 }
 .auth_button_group {
   @apply m-auto flex w-8/10 flex-col items-center justify-between space-y-4;
+  @apply landscape:m-4 landscape:w-auto landscape:flex-row landscape:space-y-0 landscape:space-x-4;
   --user-auth-dark: #3a6fc8;
   --user-auth-light: #6ec3f0;
   --trial-auth-dark: #e6456a;
@@ -233,7 +260,7 @@ watch(templateId, getTemplateInfo, { immediate: true });
   --coupon-auth-light: #b389ff;
 }
 .auth_button {
-  @apply flex w-full items-center rounded-4xl p-2 text-white ring-4 ring-gray-200 transition-all active:ring-gray-400;
+  @apply flex w-full flex-1 items-center rounded-4xl p-2 text-white ring-4 ring-gray-200 transition-all active:ring-gray-400;
   .icon-wrapper {
     @apply rounded-full bg-gray-200 p-2;
     color: var(--auth-text-color);
