@@ -32,7 +32,7 @@ const handleUserDropdownClick = async (option) => {
       <!-- logo and title -->
       <router-link to="/" class="flex items-center">
         <t-icon name="user-circle" class="mx-auto text-4xl text-blue-500" />
-        <h1 class="p-0 text-center text-2xl font-bold">网关预登录认证管理</h1>
+        <h1 class="p-0 text-center text-2xl font-bold">网关预登录认证管理系统</h1>
       </router-link>
       <div class="flex items-center space-x-8">
         <nav class="flex space-x-8">

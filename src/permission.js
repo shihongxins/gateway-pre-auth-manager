@@ -16,6 +16,7 @@ router.beforeEach((to) => {
     MessagePlugin.warning('无权访问，请先登录');
     return '/login';
   }
+  window.document.title = /** @type {string} */ (to.meta.title) || '网关预登录认证管理系统';
 });
 
 export const REQUEST_WHITELIST = ['/login', '/loginOut', '/getTemplateDetail'];

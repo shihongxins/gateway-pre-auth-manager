@@ -45,6 +45,10 @@ async function getTemplateInfo() {
         setTimeout(() => {
           authDrawerVisible.value = true;
         }, wait_time);
+        if (!props.id) {
+          window.document.title =
+            /** @type {string} */ (templateInfo.value?.page_title) || '网关预登录认证管理系统';
+        }
       }
     } catch (error) {
       MessagePlugin.error(error.message);

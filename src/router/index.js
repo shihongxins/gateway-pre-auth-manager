@@ -20,7 +20,7 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
       meta: {
-        title: '登录',
+        title: '网关预登录认证管理系统 - 登录',
       },
     },
     {
@@ -34,7 +34,7 @@ const router = createRouter({
           name: 'user',
           component: () => import('@/views/user/UserList.vue'),
           meta: {
-            title: '用户管理',
+            title: '网关预登录认证管理系统 - 用户管理',
           },
         },
         {
@@ -42,7 +42,7 @@ const router = createRouter({
           name: 'file',
           component: () => import('@/views/file/FileList.vue'),
           meta: {
-            title: '素材管理',
+            title: '网关预登录认证管理系统 - 素材管理',
           },
         },
         {
@@ -50,7 +50,7 @@ const router = createRouter({
           name: 'template',
           component: () => import('@/views/template/TemplateList.vue'),
           meta: {
-            title: '模板管理',
+            title: '网关预登录认证管理系统 - 模板管理',
           },
         },
       ],
