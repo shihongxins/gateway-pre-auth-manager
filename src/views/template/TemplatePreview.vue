@@ -1,6 +1,4 @@
 <script setup>
-import AuthView from '../AuthView.vue';
-
 const visible = ref(false);
 const templateId = ref(0);
 const templateLink = computed(() => {
@@ -51,17 +49,10 @@ defineExpose({
         </t-popup>
       </template>
     </t-input>
-    <div
-      style="
-        width: 375px;
-        height: 667px;
-        margin: 0 auto;
-        box-shadow: 0 0 1px 0px #000;
-        border-radius: 4px;
-        overflow: hidden;
-      "
-    >
-      <auth-view :id="templateId"></auth-view>
-    </div>
+    <iframe
+      :src="templateLink"
+      style="width: 375px; height: 667px; margin: 0 auto"
+      frameborder="0"
+    ></iframe>
   </t-dialog>
 </template>
