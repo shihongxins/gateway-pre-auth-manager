@@ -36,18 +36,32 @@ const handleUserDropdownClick = async (option) => {
       </router-link>
       <div class="flex items-center space-x-8">
         <nav class="flex space-x-8">
-          <router-link to="/" class="rounded p-2 transition hover:bg-blue-400/50">首页</router-link>
+          <router-link
+            to="/"
+            class="rounded p-2 transition hover:bg-blue-400/50"
+            exact-active-class="bg-blue-400/50"
+            >首页</router-link
+          >
           <router-link
             to="/user"
             class="rounded p-2 transition hover:bg-blue-400/50"
+            exact-active-class="bg-blue-400/50"
             v-if="userStore.isAdmin"
           >
             用户管理
           </router-link>
-          <router-link to="/file" class="rounded p-2 transition hover:bg-blue-400/50">
+          <router-link
+            to="/file"
+            class="rounded p-2 transition hover:bg-blue-400/50"
+            exact-active-class="bg-blue-400/50"
+          >
             素材管理
           </router-link>
-          <router-link to="/template" class="rounded p-2 transition hover:bg-blue-400/50">
+          <router-link
+            to="/template"
+            class="rounded p-2 transition hover:bg-blue-400/50"
+            exact-active-class="bg-blue-400/50"
+          >
             模板管理
           </router-link>
         </nav>
