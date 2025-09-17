@@ -42,20 +42,35 @@ async function getTemplateInfo() {
       } else {
         templateInfo.value = res.data;
         loading.value = false;
-        const wait_time = (+templateInfo.value?.wait_time || 30) * 1000;
-        setTimeout(() => {
-          authDrawerVisible.value = true;
-        }, wait_time);
         if (!props.id) {
           window.document.title =
             /** @type {string} */ (templateInfo.value?.page_title) || '网关预登录认证管理系统';
         }
+        startTimerForWaitTime();
       }
     } catch (error) {
       MessagePlugin.error(error.message);
       setTimeout(getTemplateInfo, 10000);
     }
   }
+}
+
+function startTimerForWaitTime() {
+  if (!templateInfo.value?.wait_time || templateInfo.value.wait_time <= 0) {
+    MessagePlugin.warning('未设置等待时间，默认30秒');
+  }
+  const wait_time = (+templateInfo.value?.wait_time || 30) * 1000;
+  setTimeout(() => {
+    authDrawerVisible.value = true;
+  }, wait_time);
+}
+
+function handleAuth(type = 0) {
+  if (![1, 2, 11].includes(type)) {
+    return MessagePlugin.warning('未知认证方式');
+  }
+  const search = window.self.location.search;
+  window.self.location.href = `	http://portal.ikuai8-wifi.com/Action/webauth-up?type=${type}${search.replace('?', '&')}`;
 }
 
 const swiperAutoPlay = ref(false);
@@ -195,6 +210,7 @@ const authDrawerSize = computed(() => {
         <button
           class="auth_button"
           style="background: linear-gradient(135deg, var(--user-auth-dark), var(--user-auth-light))"
+          @click="handleAuth(1)"
         >
           <div class="icon-wrapper">
             <t-icon name="user" size="24" style="color: var(--user-auth-light)"></t-icon>
@@ -209,6 +225,7 @@ const authDrawerSize = computed(() => {
           style="
             background: linear-gradient(135deg, var(--trial-auth-dark), var(--trial-auth-light));
           "
+          @click="handleAuth(11)"
         >
           <div class="icon-wrapper">
             <t-icon name="gift" size="24" style="color: var(--trial-auth-light)"></t-icon>
@@ -223,6 +240,7 @@ const authDrawerSize = computed(() => {
           style="
             background: linear-gradient(135deg, var(--coupon-auth-dark), var(--coupon-auth-light));
           "
+          @click="handleAuth(2)"
         >
           <div class="icon-wrapper">
             <t-icon name="sim-card" size="24" style="color: var(--coupon-auth-light)"></t-icon>
