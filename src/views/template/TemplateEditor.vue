@@ -47,7 +47,7 @@ const emptyTemplateInfo = () => ({
   contact: '',
   introduction: '',
   wait_time: 30,
-  auth_success_link: null,
+  // auth_success_link: null,
 });
 const formData = reactive(emptyTemplateInfo());
 const FORM_RULES = templateApi.templateFieldRules;
@@ -198,6 +198,7 @@ defineExpose({
           v-model.number="formData.wait_time"
         />
       </t-form-item>
+      <!--
       <t-form-item label="成功跳转至" name="auth_success_link">
         <t-input
           placeholder="请输入成功跳转至"
@@ -205,6 +206,7 @@ defineExpose({
           v-model.trim="formData.auth_success_link"
         />
       </t-form-item>
+      -->
     </t-form>
   </t-dialog>
 </template>

@@ -29,7 +29,7 @@ export interface TemplateInfo {
   /** 页面等待时间 秒 */
   wait_time: number;
   /** 授权成功跳转链接 */
-  auth_success_link: string;
+  // auth_success_link: string;
   /** 创建时间 */
   create_at?: string;
   /** 更新时间 */

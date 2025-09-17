@@ -33,7 +33,7 @@ export const templateFieldRules = {
       },
     },
   ],
-  auth_success_link: [{ required: true, pattern: /^(\s+)?$/, message: '成功跳转链接不能为空' }],
+  // auth_success_link: [{ required: true, pattern: /^(\s+)?$/, message: '成功跳转链接不能为空' }],
 };
 
 /**
