@@ -7,7 +7,8 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: '/auth',
+      // path 带可选参数 id
+      path: '/auth/:id?',
       name: 'auth',
       component: AuthView,
       meta: {

@@ -10,7 +10,7 @@ const props = defineProps({
   },
 });
 const router = useRouter();
-const templateId = computed(() => props.id || +router.currentRoute.value.query.id || 0);
+const templateId = computed(() => props.id || +router.currentRoute.value.params.id || 0);
 /**
  * @type {import('vue').Ref<import('../types/TemplateInfo').TemplateInfo|null>}
  */

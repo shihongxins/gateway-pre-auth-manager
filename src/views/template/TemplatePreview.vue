@@ -2,7 +2,7 @@
 const visible = ref(false);
 const templateId = ref(0);
 const templateLink = computed(() => {
-  return `${window.location.origin}/#/auth?id=${unref(templateId)}`;
+  return `${window.location.origin}/#/auth/${unref(templateId)}`;
 });
 const showPreview = (id = 0) => {
   templateId.value = unref(id);
