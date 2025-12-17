@@ -20,6 +20,7 @@ export function addFile(info) {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      timeout: 0,
     })
     .then((res) => res.data);
 }
